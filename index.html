@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Error</title>
+    <title>Android Boot</title>
     <style>
         * {
             margin: 0;
@@ -12,7 +12,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Roboto', 'Segoe UI', sans-serif;
             overflow: hidden;
             cursor: pointer;
         }
@@ -49,63 +49,151 @@
             50% { opacity: 0.5; }
         }
 
-        #bsod {
+        #bootloop {
             display: none;
-            background-color: #0078d7;
-            color: white;
+            background-color: #000000;
             height: 100vh;
-            padding: 60px;
             position: relative;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
         }
 
-        #bsod.active {
-            display: block;
+        #bootloop.active {
+            display: flex;
         }
 
-        .sad-face {
-            font-size: 120px;
-            margin-bottom: 30px;
+        .boot-logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .error-text {
-            font-size: 28px;
-            margin-bottom: 40px;
+        .android-logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 50px;
+            animation: bootPulse 1.5s infinite ease-in-out;
         }
 
-        .error-detail {
-            font-size: 18px;
-            line-height: 1.8;
-            margin-bottom: 20px;
+        @keyframes bootPulse {
+            0%, 100% { 
+                opacity: 0.4; 
+                transform: scale(0.95);
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1);
+            }
         }
 
-        .progress {
-            font-size: 20px;
+        .boot-text {
+            color: #FFFFFF;
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .boot-subtext {
+            color: #999;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .dots-container {
             margin-top: 40px;
+            display: flex;
+            gap: 8px;
         }
 
-        .percentage {
-            font-size: 32px;
-            font-weight: bold;
-            margin-top: 10px;
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            animation: dotPulse 1.4s infinite ease-in-out;
+        }
+
+        .dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes dotPulse {
+            0%, 80%, 100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+            40% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        .boot-status {
+            color: #666;
+            font-size: 11px;
+            margin-top: 60px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            min-height: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Simulate screen flicker occasionally */
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.95; }
+        }
+
+        #bootloop.flicker {
+            animation: flicker 0.1s;
         }
 
         #reveal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 50px 60px;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            color: white;
+            animation: popIn 0.5s ease-out;
+            z-index: 1000;
+            max-width: 90%;
+        }
+
+        #reveal.active {
+            display: block;
+        }
+
+        #overlay {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            color: white;
-            animation: fadeIn 0.5s;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 999;
         }
 
-        #reveal.active {
-            display: flex;
+        #overlay.active {
+            display: block;
+            animation: fadeIn 0.3s;
         }
 
         @keyframes fadeIn {
@@ -113,25 +201,37 @@
             to { opacity: 1; }
         }
 
+        @keyframes popIn {
+            0% { 
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            100% { 
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
         #reveal h1 {
-            font-size: 5em;
-            margin-bottom: 20px;
+            font-size: 3.5em;
+            margin-bottom: 15px;
             animation: bounce 1s;
         }
 
         #reveal p {
-            font-size: 2em;
+            font-size: 1.8em;
+            margin-bottom: 30px;
         }
 
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-30px); }
-            60% { transform: translateY(-15px); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
         }
 
         .emoji {
-            font-size: 100px;
-            margin-bottom: 30px;
+            font-size: 80px;
+            margin-bottom: 20px;
             animation: rotate 2s infinite;
         }
 
@@ -140,36 +240,121 @@
             25% { transform: rotate(-10deg); }
             75% { transform: rotate(10deg); }
         }
+
+        .download-btn {
+            background: white;
+            color: #f5576c;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: #fff;
+        }
+
+        .download-btn:active {
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 <body>
     <div id="start-screen">
         <div>
-            <h1></h1>
+            <h1>📱</h1>
             <p>Click anywhere to continue...</p>
         </div>
     </div>
 
-    <div id="bsod">
-        <div class="sad-face">:(</div>
-        <div class="error-text">Your Android ran into a problem and needs to restart. We're just collecting some error info, and then we'll restart for you.</div>
-        <div class="error-detail">
-            <div style="margin-bottom: 30px;">
-                <div id="progress-text" class="progress">Complete: <span id="percentage" class="percentage">0%</span></div>
-            </div>
-            <div>If you'd like to know more, you can search online later for this error: CRITICAL_PROCESS_DIED</div>
+    <div id="bootloop">
+        <div class="boot-logo-container">
+            <!-- Android Robot SVG -->
+            <svg class="android-logo" viewBox="0 0 24 24" fill="#3DDC84">
+                <path d="M17.6,9.48l1.84-3.18c0.16-0.31,0.04-0.69-0.26-0.85c-0.29-0.15-0.65-0.06-0.83,0.22l-1.88,3.24 c-2.86-1.21-6.08-1.21-8.94,0L5.65,5.67c-0.19-0.29-0.58-0.38-0.87-0.2C4.5,5.65,4.41,6.01,4.56,6.3L6.4,9.48 C3.3,11.25,1.28,14.44,1,18h22C22.72,14.44,20.7,11.25,17.6,9.48z M7,15.25c-0.69,0-1.25-0.56-1.25-1.25 c0-0.69,0.56-1.25,1.25-1.25S8.25,13.31,8.25,14C8.25,14.69,7.69,15.25,7,15.25z M17,15.25c-0.69,0-1.25-0.56-1.25-1.25 c0-0.69,0.56-1.25,1.25-1.25s1.25,0.56,1.25,1.25C18.25,14.69,17.69,15.25,17,15.25z"/>
+            </svg>
+            <div class="boot-text">android</div>
+            <div class="boot-subtext" id="boot-subtext"></div>
         </div>
+        <div class="dots-container">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+        <div class="boot-status" id="boot-status"></div>
     </div>
+
+    <div id="overlay"></div>
 
     <div id="reveal">
         <div class="emoji">🎉</div>
-        <h1>Hacked! 😂</h1>
-        <p>Happy Birthday! 🎂🎈</p>
+        <h1>Your Android is at risk!</h1>
+        <p>Download this to Fix it</p>
+        <button class="download-btn" onclick="downloadAPK()">📥 Download APK</button>
     </div>
 
     <script>
-        let percentage = 0;
+        const bootMessages = [
+            '',
+            'Booting...',
+            'Loading kernel...',
+            '',
+            'Starting services...',
+            'Verifying boot...',
+            '',
+            'Checking system...',
+            'Loading Android...',
+            '',
+            'Initializing...',
+            '',
+            'Starting...',
+            '',
+        ];
+
+        const bootSubtexts = [
+            '',
+            'powered by android',
+            '',
+            'powered by android',
+            '',
+            'powered by android',
+            '',
+        ];
+        
+        let messageIndex = 0;
+        let bootCycles = 0;
         let interval;
+        let subtextInterval;
+        let flickerInterval;
+
+        function downloadAPK() {
+            // Create a dummy APK file (you can replace this with actual APK content)
+            const apkContent = 'This is a placeholder APK file. Replace with actual APK content.';
+            const blob = new Blob([apkContent], { type: 'application/vnd.android.package-archive' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'birthday-surprise.apk';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+
+        function addFlicker() {
+            const bootloop = document.getElementById('bootloop');
+            bootloop.classList.add('flicker');
+            setTimeout(() => {
+                bootloop.classList.remove('flicker');
+            }, 100);
+        }
 
         document.getElementById('start-screen').addEventListener('click', function() {
             // Go fullscreen
@@ -182,34 +367,45 @@
                 elem.msRequestFullscreen();
             }
 
-            // Show BSOD
+            // Show bootloop
             document.getElementById('start-screen').style.display = 'none';
-            document.getElementById('bsod').classList.add('active');
+            document.getElementById('bootloop').classList.add('active');
 
-            // Start percentage counter
-            interval = setInterval(() => {
-                percentage += Math.floor(Math.random() * 3) + 1;
-                if (percentage >= 100) {
-                    percentage = 100;
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        document.getElementById('bsod').classList.remove('active');
-                        document.getElementById('reveal').classList.add('active');
-                        
-                        // Exit fullscreen after reveal
-                        setTimeout(() => {
-                            if (document.exitFullscreen) {
-                                document.exitFullscreen();
-                            } else if (document.webkitExitFullscreen) {
-                                document.webkitExitFullscreen();
-                            } else if (document.msExitFullscreen) {
-                                document.msExitFullscreen();
-                            }
-                        }, 3000);
-                    }, 1000);
+            // Occasional screen flicker for realism
+            flickerInterval = setInterval(() => {
+                if (Math.random() > 0.7) {
+                    addFlicker();
                 }
-                document.getElementById('percentage').textContent = percentage + '%';
-            }, 150);
+            }, 3000);
+
+            // Subtext rotation
+            let subtextIndex = 0;
+            subtextInterval = setInterval(() => {
+                document.getElementById('boot-subtext').textContent = bootSubtexts[subtextIndex % bootSubtexts.length];
+                subtextIndex++;
+            }, 2000);
+
+            // Start boot messages cycle
+            interval = setInterval(() => {
+                document.getElementById('boot-status').textContent = bootMessages[messageIndex];
+                messageIndex++;
+                
+                if (messageIndex >= bootMessages.length) {
+                    messageIndex = 0;
+                    bootCycles++;
+                    
+                    // After 3 complete boot cycles, show the reveal
+                    if (bootCycles >= 2) {
+                        clearInterval(interval);
+                        clearInterval(subtextInterval);
+                        clearInterval(flickerInterval);
+                        setTimeout(() => {
+                            document.getElementById('overlay').classList.add('active');
+                            document.getElementById('reveal').classList.add('active');
+                        }, 500);
+                    }
+                }
+            }, 600);
         });
     </script>
 </body>
